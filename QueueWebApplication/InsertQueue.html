@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>
+        Insert Queue
+    </title>
+    <link href="Pure-min.css" rel="stylesheet" />
+    <link href="ButtonStyles.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/angular.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function ($scope) {
+
+            $scope.inserted = false;
+            $scope.error = false;
+            $scope.redirectDequeue = function () {
+                window.location = "Dequeue.html";
+            };
+
+            $scope.redirectShowAll = function () {
+                window.location = "ShowAll.html";
+            };
+
+            $scope.enQueueClick = function () {
+                if ($scope.text != undefined) {
+                    $scope.error = false;
+                    $scope.inserted = false;
+                    $scope.$apply();
+                    $.ajax({
+                        url: 'Default.aspx/Enqueue',
+                        type: 'POST',
+                        data: JSON.stringify({ obj: $scope.text }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            //alert(data);
+                            $scope.inserted = true;
+                            $scope.text = '';
+                            $scope.$apply();
+                        },
+                        failure: function (err) {
+
+                        }
+                    });
+                }
+                else {
+                    $scope.error = true;
+                    $scope.$apply();
+                }
+            };
+           
+        });
+    </script>
+</head>
+<body>
+    <div ng-app="myApp" ng-controller="myCtrl" class="dequeue">
+        <label>Enter text/value</label>
+        <input type="text" id="txtInsert" ng-model="text" />
+        <input type="button" id="btnInsert" value="Insert in Queue" class="button-success pure-button" ng-click="enQueueClick()" />
+        <br /><label ng-if="error" class="errorMsg">Enter a value</label>
+        <br /><br/>
+        <input type="button" value="Go to Dequeue page" class="button-error pure-button" ng-click="redirectDequeue()" />
+        <input type="button" value="Go to Show All page" class="button-secondary pure-button" ng-click="redirectShowAll()" />
+        <br/>
+        <br/>
+        <label ng-if="inserted"  class="SuccessMsg">Value inserted</label>
+    </div>
+</body>
+
+</html>

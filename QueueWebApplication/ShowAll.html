@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Display Queue</title>
+    <link href="Pure-min.css" rel="stylesheet" />
+    <link href="ButtonStyles.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/angular.min.js"></script>
+    <script>
+        var app1 = angular.module('myApp1', []);
+        app1.controller('myCtrl1', function ($scope) {
+            $scope.QueueElements = [];
+
+            $scope.redirectInsert = function () {
+                window.location = "InsertQueue.html";
+            };
+
+            $scope.redirectDequeue = function () {
+                window.location = "Dequeue.html";
+            };
+
+            $scope.displayAllClick = function () {
+                $.ajax({
+                    url: 'Default.aspx/GetQueue',
+                    type: 'POST',
+                    data: '',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                       
+                        var elements = JSON.parse(data.d);
+                        for (var i = elements.length -1 ; i >= 0; i--) {
+                            $scope.QueueElements.push(elements[i]);
+                        } 
+                            
+                        $scope.$apply();
+
+                    },
+                    failure: function (err) {
+
+                    }
+                });
+            };
+        });
+    </script>
+</head>
+<body>
+    <div ng-app="myApp1" ng-controller="myCtrl1" ng-init="displayAllClick()" class="dequeue">
+        <label ng-if="QueueElements.length == 0"> There are no items in Queue</label>
+        <label ng-if="QueueElements.length > 0"> Items in Queue</label>
+       
+        <ul>
+            <li ng-repeat="el in QueueElements">
+                <label class="QueueElement">{{el}}</label>
+            </li>
+        </ul>
+
+        <input type="button" value="Go to Insert Queue page" class="button-secondary pure-button" ng-click="redirectInsert()" />
+        <input type="button" value="Go to Dequeue page" class="button-error pure-button" ng-click="redirectDequeue()" />
+    </div>
+</body>
+</html>

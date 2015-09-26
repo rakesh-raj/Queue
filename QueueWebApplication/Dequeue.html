@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Dequeue</title>
+    <link href="Pure-min.css" rel="stylesheet" />
+    <link href="ButtonStyles.css" rel="stylesheet" />
+    <style type="text/css">
+        
+        .PageBackgroundColor {
+            /*background-color: aliceblue;*/
+        }
+
+       
+        </style>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/angular.min.js"></script>
+    <script>
+        var app3 = angular.module('myApp2', []);
+        app3.controller('myCtrl2', function ($scope) {
+            $scope.deleted = false;
+            $scope.redirectShowAll = function () {
+                window.location = "ShowAll.html";
+            };
+
+            $scope.deQueueClick = function () {
+                $.ajax({
+                    url: 'Default.aspx/Dequeue',
+                    type: 'POST',
+                    data: '',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $scope.deleted = true;
+                        $scope.$apply();
+                    },
+                    failure: function (err) {
+
+                    }
+                });
+            };
+        });
+    </script>
+            </head>
+<body class="PageBackgroundColor">
+    <div ng-app="myApp2" ng-controller="myCtrl2" class="dequeue">
+        <label> To Dequeue click below button</label><br /><br/>
+        <input type="button" id="btnDequeue" value="Dequeue" class="button-error pure-button" ng-click="deQueueClick()" />
+        <label ng-if="deleted" class="SuccessMsg"> First Element Removed!</label>
+        <br/>
+        <br/>
+        <input type="button" value="Go to Show All page" class="button-secondary pure-button" ng-click="redirectShowAll()" />
+    </div>
+
+</body>
+            </html>
